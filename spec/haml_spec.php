@@ -396,6 +396,7 @@ EOS;
 			
 		$spec->it("should work full integrated features", function($spec, $data) {
 			$template = <<<EOS
+!!! Strict
 %html
 	%head
 		%title Title of Page
@@ -422,6 +423,8 @@ EOS;
 EOS;
 			
 			$expected = <<<EOS
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 	<head>
 		<title>Title of Page</title>
