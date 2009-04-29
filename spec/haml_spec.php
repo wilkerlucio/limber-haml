@@ -166,6 +166,30 @@ EOS;
 
 			spec_parse($spec, $template, $expected);
 		});
+
+		$spec->context("parsing doctype", function($spec) {
+			$spec->it("should generate transitional by default", function($spec, $data) {
+				$template  = "!!!";
+				$expected  = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"' . "\n";
+				$expected .= '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
+				
+				spec_parse($spec, $template, $expected);
+			});
+			$spec->it("should generate strict doctype", function($spec, $data) {
+				$template  = "!!! Strict";
+				$expected  = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' . "\n";
+				$expected .= '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
+				
+				spec_parse($spec, $template, $expected);
+			});
+			$spec->it("should generate frameset doctype", function($spec, $data) {
+				$template  = "!!! Frameset";
+				$expected  = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"' . "\n";
+				$expected .= '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">';
+				
+				spec_parse($spec, $template, $expected);
+			});
+		});
 		
 		$spec->context("parsing tag shortcuts", function($spec) {
 			$spec->it("should create a div with ID when passing #", function($spec, $data) {

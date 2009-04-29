@@ -24,6 +24,12 @@ class Haml
 	
 	private static $AUTOCLOSE = array("br", "hr", "meta", "link");
 	
+	private static $DOCTYPE = array(
+			"strict"       => "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
+			"transitional" => "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">",
+			"frameset"     => "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Frameset//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">"
+	);
+	
 	public function parse($data)
 	{
 		$this->element_stack = array();
@@ -125,6 +131,14 @@ class Haml
 					
 					$this->write($this->$fn($code));
 				}
+			} elseif(preg_match("/^!!!\s*(.*)/", $line, $matches)) {
+				$type = @$matches[1] ? strtolower($matches[1]) : "transitional";
+				
+				if (!isset(self::$DOCTYPE[$type])) {
+					throw new HamlParseException("Invalid doctype {$type} at line {$line_number}");
+				}
+				
+				$this->write(self::$DOCTYPE[$type]);
 			} else {
 				$this->write($line);
 			}
