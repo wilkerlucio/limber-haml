@@ -393,6 +393,70 @@ EOS;
 			});
 		});
 		
+		$spec->context("creating comments", function($spec) {
+			$spec->it("should comment single line", function($spec, $data) {
+				$template = '/ single line comment';
+				$expected = '<!-- single line comment -->';
+				
+				spec_parse($spec, $template, $expected);
+			});
+			
+			$spec->it("should comment multi line", function($spec, $data) {
+				$template = <<<EOS
+/ 
+	multiline comments
+	at multiple lines
+EOS;
+				$expected = <<<EOS
+<!--
+	multiline comments
+	at multiple lines
+-->
+EOS;
+
+				spec_parse($spec, $template, $expected);
+			});
+		});
+		
+		$spec->context("using filters", function($spec) {
+			$spec->it("should apply javascript filter", function($spec, $data) {
+				$template = <<<EOS
+:javascript
+	//some comment
+	window.onload = function() {
+		alert("ok, you got it!");
+	};
+EOS;
+				$expected = <<<EOS
+<script type="text/javascript">
+	//some comment
+	window.onload = function() {
+		alert("ok, you got it!");
+	};
+</script>
+EOS;
+
+				spec_parse($spec, $template, $expected);
+			});
+			
+			$spec->it("should apply php filter", function($spec, $data) {
+				$template = <<<EOS
+:php
+	\$a = "some value";
+	\$b = "other";
+	\$c = \$a + \$b;
+EOS;
+				$expected = <<<EOS
+<?php
+	\$a = "some value";
+	\$b = "other";
+	\$c = \$a + \$b;
+?>
+EOS;
+
+				spec_parse($spec, $template, $expected);
+			});
+		});
 			
 		$spec->it("should work full integrated features", function($spec, $data) {
 			$template = <<<EOS
