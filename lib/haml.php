@@ -97,7 +97,7 @@ class Haml
 				$content = isset($matches[4]) ? $matches[4] : "";
 				$multiline = !$autoclose && $this->calculate_indent(@$lines[$line_number + 1]) > $this->current_indent;
 				
-				if ($matches[2] == '=') {
+				if (@$matches[2] == '=') {
 					$content = $this->php_echo($content);
 				}
 				
