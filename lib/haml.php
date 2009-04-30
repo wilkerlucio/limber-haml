@@ -125,11 +125,20 @@ class Haml
 					$this->write($this->php_code("{$statement} ({$params}):"));
 					$this->stack_element($this->php_code("end{$statement}"));
 				} elseif(preg_match("/^else/", $code)) {
-					
+					continue;
 				} else {
 					$fn = $write ? "php_echo" : "php_code";
 					
 					$this->write($this->$fn($code));
+				}
+			} elseif(preg_match("/^\/\s*(.*)/", $line, $matches)) {
+				$nested = $this->calculate_indent(@$lines[$line_number + 1]) > $this->current_indent;
+				
+				if ($nested) {
+					$this->write("<!--");
+					$this->stack_element("-->");
+				} else {
+					$this->write("<!-- {$matches[1]} -->");
 				}
 			} elseif(preg_match("/^!!!\s*(.*)/", $line, $matches)) {
 				$type = @$matches[1] ? strtolower($matches[1]) : "transitional";
