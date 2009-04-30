@@ -38,7 +38,11 @@ class Haml
 		
 		$lines = preg_split("(\r\n|\n|\r)", $data);
 		
-		foreach ($lines as $line_number => $line) {
+		$line_number = 0;
+		
+		while ($line_number < count($lines)) {
+			$line = $lines[$line_number];
+			
 			$indent = $this->calculate_indent($line);
 			
 			if ($indent > $this->current_indent) {
@@ -52,6 +56,7 @@ class Haml
 				$this->write($this->php_code("else:"));
 				$this->current_indent += 1;
 				
+				$line_number++;
 				continue;
 			}
 			
@@ -125,6 +130,7 @@ class Haml
 					$this->write($this->php_code("{$statement} ({$params}):"));
 					$this->stack_element($this->php_code("end{$statement}"));
 				} elseif(preg_match("/^else/", $code)) {
+					$line_number++;
 					continue;
 				} else {
 					$fn = $write ? "php_echo" : "php_code";
@@ -140,6 +146,33 @@ class Haml
 				} else {
 					$this->write("<!-- {$matches[1]} -->");
 				}
+			} elseif(preg_match("/^:(.+)/", $line, $matches)) {
+				$filter = trim($matches[1]);
+				$code = "";
+				
+				while ($this->calculate_indent(@$lines[++$line_number]) > $indent) {
+					$code .= $this->remove_indent($lines[$line_number], $indent) . "\n";
+				}
+				
+				switch ($filter) {
+					case 'javascript':
+						$tags = array('<script type="text/javascript">', '</script>');
+						break;
+					case 'php':
+						$tags = array('<?php', '?>');
+						break;
+					case 'css':
+						$tags = array('<style type="text/css">', '</style>');
+						break;
+					default:
+						$tags = array('', '');
+				}
+				
+				$code = $tags[0] . "\n" . $code . $tags[1];
+				
+				$this->write($code);
+				
+				continue;
 			} elseif(preg_match("/^!!!\s*(.*)/", $line, $matches)) {
 				$type = @$matches[1] ? strtolower($matches[1]) : "transitional";
 				
@@ -151,6 +184,8 @@ class Haml
 			} else {
 				$this->write($line);
 			}
+			
+			$line_number++;
 		}
 		
 		while (count($this->element_stack) > 0) {
@@ -158,6 +193,11 @@ class Haml
 		}
 		
 		return trim($this->buffer);
+	}
+	
+	private function remove_indent($line, $levels)
+	{
+		return substr($line, $levels);
 	}
 	
 	private function php_code($code)
@@ -216,9 +256,13 @@ class Haml
 	
 	private function write($data)
 	{
-		$this->buffer .= str_repeat("\t", $this->current_indent);
-		$this->buffer .= $data;
-		$this->buffer .= "\n";
+		$lines = preg_split("/(\r\n|\n|\r)/", $data);
+		
+		foreach ($lines as $line) {
+			$this->buffer .= str_repeat("\t", $this->current_indent);
+			$this->buffer .= $line;
+			$this->buffer .= "\n";
+		}
 	}
 	
 	private function calculate_indent($line)

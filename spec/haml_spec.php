@@ -456,6 +456,24 @@ EOS;
 
 				spec_parse($spec, $template, $expected);
 			});
+			
+			$spec->it("should apply css filter", function($spec, $data) {
+				$template = <<<EOS
+:css
+	body {
+		background: #fff;
+	}
+EOS;
+				$expected = <<<EOS
+<style type="text/css">
+	body {
+		background: #fff;
+	}
+</style>
+EOS;
+
+				spec_parse($spec, $template, $expected);
+			});
 		});
 			
 		$spec->it("should work full integrated features", function($spec, $data) {
@@ -465,6 +483,10 @@ EOS;
 	%head
 		%title Title of Page
 		%meta {http-equiv="Content-Type" content="text/html; charset=utf-8"}
+		:javascript
+			window.onload = function() {
+				alert('loaded');
+			};
 	%body
 		#all
 			.bg
@@ -493,6 +515,11 @@ EOS;
 	<head>
 		<title>Title of Page</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script type="text/javascript">
+			window.onload = function() {
+				alert('loaded');
+			};
+		</script>
 	</head>
 	<body>
 		<div id="all">
