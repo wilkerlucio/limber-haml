@@ -64,10 +64,10 @@ class Haml
 				$this->element_pop();
 			}
 			
-			if (preg_match("/^([%#.][a-z#.0-9]+)(\/|=)?(?:\s+\{(.*?)})?(?:\s+(.*))?/i", $line, $matches)) {
+			if (preg_match("/^([%#.][a-z#.0-9_-]+)(\/|=)?(?:\s+\{(.*?)})?(?:\s+(.*))?/i", $line, $matches)) {
 				$attributes = array();
 				
-				preg_match_all("/([%#.])([a-z0-9]+)/i", $matches[1], $operations, PREG_SET_ORDER);
+				preg_match_all("/([%#.])([a-z0-9_-]+)/i", $matches[1], $operations, PREG_SET_ORDER);
 				
 				$classes = array();
 				$tag = null;

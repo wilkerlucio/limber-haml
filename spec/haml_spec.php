@@ -226,6 +226,20 @@ EOS;
 				
 				spec_parse($spec, $template, $expected);
 			});
+			
+			$spec->it("should accept _ and - when naming ids", function($spec, $data) {
+				$template = '%span#main-content_here';
+				$expected = '<span id="main-content_here"></span>';
+				
+				spec_parse($spec, $template, $expected);
+			});
+			
+			$spec->it("should accept _ and - when naming classes", function($spec, $data) {
+				$template = '%span.main-content_here';
+				$expected = '<span class="main-content_here"></span>';
+				
+				spec_parse($spec, $template, $expected);
+			});
 		});
 		
 		$spec->context("parsing tag attributes", function($spec) {
