@@ -42,6 +42,13 @@ describe("Haml", function($spec) {
 			spec_parse($spec, $template, $expected);
 		});
 		
+		$spec->it("should parse tags in single line with selfclose", function($spec, $data) {
+			$template = "%div/";
+			$expected = "<div />";
+			
+			spec_parse($spec, $template, $expected);
+		});
+		
 		$spec->it("should parse many tags in single line", function($spec, $data) {
 			$template = <<<EOS
 %div some content
@@ -244,15 +251,29 @@ EOS;
 		
 		$spec->context("parsing tag attributes", function($spec) {
 			$spec->it("should accept one attribute into tags", function($spec, $data) {
-				$template = '%div {id="content"}';
+				$template = '%div{id="content"}';
 				$expected = '<div id="content"></div>';
+	
+				spec_parse($spec, $template, $expected);
+			});
+			
+			$spec->it("should accept attributes with tag selfclose", function($spec, $data) {
+				$template = '%div {id="content"} /';
+				$expected = '<div id="content" />';
+	
+				spec_parse($spec, $template, $expected);
+			});
+			
+			$spec->it("should accept attributes with php echo", function($spec, $data) {
+				$template = '%div{id="content"}= "content"';
+				$expected = '<div id="content"><?php echo "content" ?></div>';
 	
 				spec_parse($spec, $template, $expected);
 			});
 	
 			$spec->it("should accept attribute without quotes", function($spec, $data) {
 				$template = '%div {id = content class="many names" rel=external}';
-				$expected = '<div id=content class="many names" rel=external></div>';
+				$expected = '<div id="content" class="many names" rel="external"></div>';
 	
 				spec_parse($spec, $template, $expected);
 			});

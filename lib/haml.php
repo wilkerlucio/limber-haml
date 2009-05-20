@@ -64,7 +64,7 @@ class Haml
 				$this->element_pop();
 			}
 			
-			if (preg_match("/^([%#.][a-z#.0-9_-]+)(\/|=)?(?:\s+\{(.*?)})?(?:\s+(.*))?/i", $line, $matches)) {
+			if (preg_match("/^([%#.][a-z#.0-9_-]+)(?:\s*\{(.*?)})?(?:\s*(\/|=))?(?:\s+(.*))?/i", $line, $matches)) {
 				$attributes = array();
 				
 				preg_match_all("/([%#.])([a-z0-9_-]+)/i", $matches[1], $operations, PREG_SET_ORDER);
@@ -97,12 +97,12 @@ class Haml
 					$attributes["class"] = '"' . implode(" ", $classes) . '"';
 				}
 				
-				$autoclose = @$matches[2] == '/' || in_array($tag, self::$AUTOCLOSE);
-				$attributes_string = isset($matches[3]) ? $matches[3] : null;
+				$autoclose = @$matches[3] == '/' || in_array($tag, self::$AUTOCLOSE);
+				$attributes_string = isset($matches[2]) ? $matches[2] : null;
 				$content = isset($matches[4]) ? $matches[4] : "";
 				$multiline = !$autoclose && $this->calculate_indent(@$lines[$line_number + 1]) > $this->current_indent;
 				
-				if (@$matches[2] == '=') {
+				if (@$matches[3] == '=') {
 					$content = $this->php_echo($content);
 				}
 				
@@ -110,7 +110,7 @@ class Haml
 					preg_match_all("/([a-z][a-z-]*)\s*=\s*(('|\")?(?(3).*?\\3|[^\s]+))/i", $attributes_string, $attr_matches, PREG_SET_ORDER);
 					
 					foreach ($attr_matches as $match) {
-						$attributes[$match[1]] = $match[2];
+						$attributes[$match[1]] = @$match[3] ? $match[2] : '"' . $match[2] . '"';
 					}
 				}
 				
