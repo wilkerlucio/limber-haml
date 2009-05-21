@@ -2,7 +2,7 @@
 
 Haml is a template engine for the common type HTML
 This is one PHP implementation using the same specification of original
-"next3/haml":http://github.com/nex3/haml
+next3/haml[http://github.com/nex3/haml]
 
 <em>This document is a modified version of the original one created at
 Ruby Haml project(link above) with previous authorization of the author</em>
