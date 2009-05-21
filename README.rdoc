@@ -1,0 +1,97 @@
+= Limber Haml
+
+Haml is a template engine for the common type HTML
+This is one PHP implementation using the same specification of original
+"next3/haml":http://github.com/nex3/haml
+
+<em>This document is a modified version of the original one created at
+Ruby Haml project(link above) with previous authorization of the author</em>
+
+== Using
+
+Just download the package (using git or manual download here), extract
+at a folder of your preference and require the file *haml.php* at folder
+lib.
+
+Example:
+
+  <?php
+  
+  require "haml/lib/haml.php";
+  
+  $haml = new Haml();
+  $haml_code = file_get_contents("my_template.haml");
+  $html_code = $haml->parse($haml_code);
+  
+  echo $html_code;
+
+== Formatting
+
+=== Haml
+
+The most basic element of Haml
+is a shorthand for creating HTML tags:
+
+  %tagname{attr1='value1' attr2='value2'} Contents
+
+No end-tag is needed; Haml handles that automatically.
+Adding <tt>class</tt> and <tt>id</tt> attributes is even easier.
+Haml uses the same syntax as the CSS that styles the document:
+
+  %tagname#id.class
+
+In fact, when you're using the <tt><div></tt> tag,
+it becomes <em>even easier</em>.
+Because <tt><div></tt> is such a common element,
+a tag without a name defaults to a div. So
+
+  #foo Hello!
+
+becomes
+
+  <div id='foo'>Hello!</div>
+
+Haml uses indentation
+to bring the individual elements to represent the HTML structure.
+A tag's children are indented beneath than the parent tag.
+Again, a closing tag is automatically added.
+For example:
+
+  %ul
+    %li Salt
+    %li Pepper
+
+becomes:
+
+  <ul>
+    <li>Salt</li>
+    <li>Pepper</li>
+  </ul>
+
+You can also put plain text as a child of an element:
+
+  %p
+    Hello,
+    World!
+
+It's also possible to embed PHP code into Haml documents.
+An equals sign, <tt>=</tt>, will output the result of the code.
+A hyphen, <tt>-</tt>, will run the code but not output the result.
+You can even use control statements
+like <tt>if</tt> and <tt>while</tt>:
+
+  %p
+    Date/Time:
+    - $now = date("d/m/Y H:i:s")
+    %strong= $now
+    - if strtotime(now) > strtotime("December 31, 2006")
+      = "Happy new " . "year!"
+
+Haml provides far more tools than those presented here.
+Check out the reference documentation in the project wiki.
+
+== Indentation
+
+Actually Limber Haml supports only identation with one tab.
+In newer versions we will implement support for any consistent
+identation that user needs (with n number of tabs/spaces)
