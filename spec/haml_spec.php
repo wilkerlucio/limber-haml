@@ -149,7 +149,7 @@ EOS;
 			spec_parse($spec, $template, $expected);
 		});
 
-		$spec->it("should use automatic autoclose on tags: br, hr, link, input and meta", function($spec, $data) {
+		$spec->it("should use automatic autoclose on tags: br, hr, link, img, input and meta", function($spec, $data) {
 			$template = <<<EOS
 %div
 	%meta
@@ -158,6 +158,7 @@ EOS;
 	some text
 	%hr
 	more text
+	%img
 EOS;
 
 			$expected = <<<EOS
@@ -168,6 +169,7 @@ EOS;
 	some text
 	<hr />
 	more text
+	<img />
 </div>
 EOS;
 

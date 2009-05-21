@@ -22,7 +22,7 @@ class Haml
 	private $current_indent;
 	private $buffer;
 	
-	private static $AUTOCLOSE = array("br", "hr", "meta", "input", "link");
+	private static $AUTOCLOSE = array("br", "hr", "meta", "img", "input", "link");
 	
 	private static $DOCTYPE = array(
 			"strict"       => "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">",
